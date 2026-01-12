@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলাদেশ সরকার - জাতীয় পরিচয় পত্র চেক</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Sans Bengali', sans-serif;
+        }
+        
+        body {
+            background-color: #f0f8ff;
+            color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* বাংলাদেশ সরকার ব্যাকগ্রাউন্ড এনিমেশন */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-animation::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="%23006633" opacity="0.2"/><text x="50" y="60" text-anchor="middle" font-size="10" fill="%23006633" opacity="0.1">গণপ্রজাতন্ত্রী বাংলাদেশ</text></svg>');
+            background-repeat: repeat;
+            animation: move-bg 120s linear infinite;
+            opacity: 0.4;
+        }
+        
+        @keyframes move-bg {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        
+        /* লোডিং স্ক্রিন */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #006a4e 0%, #006a4e 50%, #f42a41 50%, #f42a41 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: rotate 3s linear infinite;
+        }
+        
+        .loading-logo i {
+            font-size: 60px;
+            color: #006a4e;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* মূল কন্টেন্ট */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 106, 78, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #f42a41;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .gov-title {
+            color: #006a4e;
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .gov-subtitle {
+            color: #f42a41;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .section-title {
+            color: #006a4e;
+            font-size: 1.8rem;
+            text-align: center;
+            margin: 30px 0 20px;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 4px;
+            background-color: #f42a41;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        
+        /* কার্ড স্টাইল */
+        .cards-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-top: 5px solid #006a4e;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 106, 78, 0.2);
+        }
+        
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #006a4e, #00875a);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 30px;
+        }
+        
+        .card-title {
+            color: #006a4e;
+            font-size: 1.8rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-description {
+            color: #555;
+            text-align: center;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* ইনপুট এবং বাটন */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s;
+            text-align: center;
+        }
+        
+        .input-field:focus {
+            border-color: #006a4e;
+            outline: none;
+        }
+        
+        .input-field.error {
+            border-color: #f42a41;
+            animation: shake 0.5s;
+        }
+        
+        .error-message {
+            color: #f42a41;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            text-align: center;
+            display: none;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #006a4e, #00875a);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(to right, #00563f, #006a4e);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 106, 78, 0.3);
+        }
+        
+        .btn-checking {
+            background: linear-gradient(to right, #f42a41, #ff6b7d);
+            animation: buttonPulse 1s infinite;
+        }
+        
+        /* ফলাফল এলাকা */
+        .result-area {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: rgba(240, 248, 255, 0.8);
+            border-radius: 10px;
+            border-left: 5px solid #006a4e;
+            display: none;
+        }
+        
+        .result-area.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-title {
+            color: #006a4e;
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        /* বিশেষ মেসেজ স্টাইল */
+        .special-message {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #f42a41;
+            text-align: center;
+            padding: 30px 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff0000, #ff6b00, #ff0000);
+            background-size: 200% 200%;
+            color: white;
+            text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.25);
+            line-height: 1.4;
+            animation: gradientMove 3s infinite alternate, textPulse 2s infinite alternate;
+            transform-origin: center;
+            letter-spacing: 1px;
+            border: 5px solid #ffcc00;
+        }
+        
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        @keyframes textPulse {
+            0% { 
+                transform: scale(1);
+                text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                text-shadow: 8px 8px 0 rgba(0, 0, 0, 0.4);
+            }
+            100% { 
+                transform: scale(1);
+                text-shadow: 5px 5px 0 rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        @keyframes buttonPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* ফুটার */
+        footer {
+            background: linear-gradient(to right, #006a4e, #00563f);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            margin-top: 50px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background-color: #f42a41;
+            top: 0;
+            left: 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-logo {
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .footer-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .footer-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .footer-info {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .footer-item i {
+            color: #f42a41;
+        }
+        
+        .copyright {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* এনিমেশন ক্লাস */
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.8s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* রেসপনসিভ ডিজাইন */
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .gov-title {
+                font-size: 1.8rem;
+            }
+            
+            .gov-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .loading-text {
+                font-size: 2rem;
+            }
+            
+            .footer-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .special-message {
+                font-size: 2.2rem;
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .special-message {
+                font-size: 1.8rem;
+                padding: 15px 10px;
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- লোডিং স্ক্রিন -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-logo">
+            <i class="fas fa-landmark"></i>
+        </div>
+        <div class="loading-text">Powered By Govt Bangladesh</div>
+    </div>
+    
+    <!-- ব্যাকগ্রাউন্ড এনিমেশন -->
+    <div class="bg-animation"></div>
+    
+    <!-- মূল কন্টেন্ট -->
+    <div class="container">
+        <header class="fade-in">
+            <div class="header-badge">অফিসিয়াল</div>
+            <h1 class="gov-title">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h1>
+            <h2 class="gov-subtitle">জাতীয় পরিচয় পত্র সেবা কেন্দ্র</h2>
+            <p>দাপ্তরিকভাবে যাচাইকৃত জাতীয় পরিচয় পত্র (NID) তথ্য এবং ফটো যাচাই সিস্টেম</p>
+        </header>
+        
+        <h2 class="section-title">পরিচয় যাচাই সেবাসমূহ</h2>
+        
+        <div class="cards-container">
+            <!-- ফোন নাম্বার দিয়ে আইডি কার্ড দেখুন -->
+            <div class="card">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3 class="card-title">ফোন নাম্বার দিয়ে আইডি কার্ড দেখুন</h3>
+                <p class="card-description">ফোন নাম্বার দিয়ে আইডি কার্ডের তথ্য যাচাই করুন। সরকারি ডাটাবেজ থেকে সরাসরি তথ্য দেখুন।</p>
+                
+                <div class="input-group">
+                    <label class="input-label" for="phoneNumberForId">ফোন নাম্বার দিন (১১ সংখ্যা)</label>
+                    <input type="text" id="phoneNumberForId" class="input-field" placeholder="যেমন: ০১৭১২৩৪৫৬৭৮" required>
+                    <div class="error-message" id="phoneError"></div>
+                </div>
+                
+                <button class="btn" id="phoneIdCheckBtn">
+                    <i class="fas fa-search"></i> চেক করুন
+                </button>
+                
+                <div class="result-area" id="phoneIdResult">
+                    <h4 class="result-title">আইডি কার্ড যাচাই ফলাফল</h4>
+                    <div class="special-message" id="specialMessage">
+                        মাদারচোদ আইডি কার্ড তোর পুটকিতে ঢুকে দেব 😁😁
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ফুটার -->
+    <footer class="fade-in">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-landmark"></i>
+            </div>
+            <h3 class="footer-title">গণপ্রজাতন্ত্রী বাংলাদেশ সরকার</h3>
+            <p class="footer-subtitle">একটি নিরাপদ, ডিজিটাল এবং উন্নত বাংলাদেশের জন্য</p>
+            
+            <div class="footer-info">
+                <div class="footer-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>সচিবালয়, ঢাকা-১০০০, বাংলাদেশ</span>
+                </div>
+                <div class="footer-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>জাতীয় হেল্পলাইন: ৩৩৩</span>
+                </div>
+                <div class="footer-item">
+                    <i class="fas fa-envelope"></i>
+                    <span>info@gov.bd</span>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; ২০২৩ গণপ্রজাতন্ত্রী বাংলাদেশ সরকার। সর্বস্বত্ব সংরক্ষিত।
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // লোডিং স্ক্রিন লুকান
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 2000);
+        });
+        
+        // বাংলা সংখ্যাকে ইংরেজি সংখ্যায় রূপান্তর করার ফাংশন
+        function convertBengaliToEnglish(number) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            const englishDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            
+            let converted = '';
+            for (let char of number) {
+                const index = bengaliDigits.indexOf(char);
+                if (index !== -1) {
+                    converted += englishDigits[index];
+                } else {
+                    converted += char;
+                }
+            }
+            return converted;
+        }
+        
+        // ফোন নাম্বার ভ্যালিডেশন ফাংশন
+        function validatePhoneNumber(phoneNumber) {
+            // বাংলা সংখ্যা থাকলে ইংরেজিতে রূপান্তর
+            const convertedNumber = convertBengaliToEnglish(phoneNumber);
+            
+            // শুধুমাত্র সংখ্যা আছে কিনা চেক
+            if (!/^\d+$/.test(convertedNumber)) {
+                return {
+                    isValid: false,
+                    message: "শুধুমাত্র সংখ্যা লিখুন (বাংলা/ইংরেজি)"
+                };
+            }
+            
+            // ১১ সংখ্যা চেক
+            if (convertedNumber.length !== 11) {
+                return {
+                    isValid: false,
+                    message: "ফোন নাম্বার অবশ্যই ১১ সংখ্যার হতে হবে"
+                };
+            }
+            
+            // বাংলাদেশের বৈধ অপারেটর চেক
+            const validOperators = ['013', '014', '015', '016', '017', '018', '019'];
+            const firstThree = convertedNumber.substring(0, 3);
+            
+            if (!validOperators.includes(firstThree)) {
+                return {
+                    isValid: false,
+                    message: "বৈধ বাংলাদেশী অপারেটর নয় (013, 014, 015, 016, 017, 018, 019)"
+                };
+            }
+            
+            return {
+                isValid: true,
+                number: convertedNumber
+            };
+        }
+        
+        // ফোন নাম্বার দিয়ে আইডি কার্ড চেক বাটন ইভেন্ট
+        document.getElementById('phoneIdCheckBtn').addEventListener('click', function() {
+            const phoneNumber = document.getElementById('phoneNumberForId').value.trim();
+            const resultArea = document.getElementById('phoneIdResult');
+            const inputField = document.getElementById('phoneNumberForId');
+            const errorMessage = document.getElementById('phoneError');
+            const checkButton = document.getElementById('phoneIdCheckBtn');
+            
+            // ফোন নাম্বার না দিলে চেক হবে না
+            if (!phoneNumber) {
+                inputField.classList.add('error');
+                errorMessage.textContent = "দয়া করে ফোন নাম্বার দিন!";
+                errorMessage.style.display = 'block';
+                
+                // ফলাফল এলাকা লুকান
+                resultArea.classList.remove('active');
+                return;
+            }
+            
+            // ফোন নাম্বার ভ্যালিডেশন
+            const validationResult = validatePhoneNumber(phoneNumber);
+            
+            if (!validationResult.isValid) {
+                inputField.classList.add('error');
+                errorMessage.textContent = validationResult.message;
+                errorMessage.style.display = 'block';
+                
+                // ফলাফল এলাকা লুকান
+                resultArea.classList.remove('active');
+                return;
+            }
+            
+            // ভ্যালিডেশন পাস করলে
+            inputField.classList.remove('error');
+            errorMessage.style.display = 'none';
+            
+            // চেকিং এনিমেশন শুরু
+            checkButton.classList.add('btn-checking');
+            checkButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> চেক করা হচ্ছে...';
+            
+            // সিমুলেটেড ডিলে (২ সেকেন্ড)
+            setTimeout(() => {
+                // চেকিং এনিমেশন বন্ধ
+                checkButton.classList.remove('btn-checking');
+                checkButton.innerHTML = '<i class="fas fa-search"></i> চেক করুন';
+                
+                // ফলাফল দেখানো
+                resultArea.classList.add('active');
+                
+                // মেসেজে এনিমেশন রিসেট এবং স্টার্ট
+                const message = document.getElementById('specialMessage');
+                message.style.animation = 'none';
+                
+                setTimeout(() => {
+                    message.style.animation = 'gradientMove 3s infinite alternate, textPulse 2s infinite alternate';
+                }, 10);
+                
+                // স্ক্রল ফলাফলের দিকে
+                resultArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 2000);
+        });
+        
+        // ইনপুট ফিল্ডে এন্টার চাপলে চেক করবে
+        document.getElementById('phoneNumberForId').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('phoneIdCheckBtn').click();
+            }
+        });
+        
+        // ইনপুট ফিল্ডে টাইপ করলে এরর মেসেজ লুকানো
+        document.getElementById('phoneNumberForId').addEventListener('input', function() {
+            this.classList.remove('error');
+            document.getElementById('phoneError').style.display = 'none';
+            
+            // শুধুমাত্র সংখ্যা (বাংলা/ইংরেজি) এবং + চিহ্ন অ্যালাউ করা
+            this.value = this.value.replace(/[^\d০-৯\+]/g, '');
+            
+            // সর্বোচ্চ ১৩ সংখ্যা (+880 সহ)
+            if (this.value.length > 13) {
+                this.value = this.value.substring(0, 13);
+            }
+        });
+        
+        // ইনপুট ফিল্ড ফোকাস হলে প্লেসহোল্ডার
+        document.getElementById('phoneNumberForId').addEventListener('focus', function() {
+            if (!this.value) {
+                this.placeholder = "যেমন: ০১৭১২৩৪৫৬৭৮ বা 01712345678";
+            }
+        });
+        
+        // ইনপুট ফিল্ড ব্লার হলে প্লেসহোল্ডার
+        document.getElementById('phoneNumberForId').addEventListener('blur', function() {
+            if (!this.value) {
+                this.placeholder = "যেমন: ০১৭১২৩৪৫৬৭৮";
+            }
+        });
+        
+        // ইনপুট ফিল্ড ফাকা রাখা (ডেমো ভ্যালু দেওয়া হবে না)
+        document.getElementById('phoneNumberForId').value = "";
+        
+        // পেজ লোড হওয়ার পর ইনপুট ফিল্ডে ফোকাস
+        window.addEventListener('load', function() {
+            setTimeout(function() {
+                document.getElementById('phoneNumberForId').focus();
+            }, 2500);
+        });
+    </script>
+</body>
+</html>
